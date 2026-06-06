@@ -9,10 +9,26 @@ class _Thing with Identifiable {
   final String label;
 }
 
+class _Other with Identifiable {
+  _Other(this.id);
+
+  @override
+  final String id;
+}
+
 void main() {
-  test('isSameAs compares ids', () {
-    expect(_Thing('a').isSameAs(_Thing('a')), isTrue);
-    expect(_Thing('a').isSameAs(_Thing('b')), isFalse);
+  group('Identifiable', () {
+    test('hasSameId compares ids regardless of type', () {
+      expect(_Thing('a').hasSameId(_Thing('a')), isTrue);
+      expect(_Thing('a').hasSameId(_Thing('b')), isFalse);
+      expect(_Thing('a').hasSameId(_Other('a')), isTrue);
+    });
+
+    test('isSameAs requires the same type and id', () {
+      expect(_Thing('a').isSameAs(_Thing('a')), isTrue);
+      expect(_Thing('a').isSameAs(_Thing('b')), isFalse);
+      expect(_Thing('a').isSameAs(_Other('a')), isFalse);
+    });
   });
 
   group('IdentifiableIterable', () {

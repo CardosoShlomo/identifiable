@@ -1,7 +1,10 @@
 mixin Identifiable {
   String get id;
 
-  bool isSameAs(Identifiable other) => id == other.id;
+  bool hasSameId(Identifiable other) => id == other.id;
+
+  bool isSameAs(Identifiable other) =>
+      runtimeType == other.runtimeType && id == other.id;
 }
 
 extension IdentifiableIterable<T extends Identifiable> on Iterable<T> {
