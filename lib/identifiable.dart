@@ -26,9 +26,6 @@ extension IdentifiableIterable<T extends Identifiable<I>, I> on Iterable<T> {
   List<T> updateById(I id, T Function(T current) update) =>
       [for (final item in this) item.id == id ? update(item) : item];
 
-  List<T> mergeDedupBy(Iterable<T> others) =>
-      [...this, ...others.where((o) => !includes(o))];
-
   Map<I, T> toMapById() => {for (final item in this) item.id: item};
 }
 
