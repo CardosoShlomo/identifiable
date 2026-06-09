@@ -51,9 +51,11 @@ void main() {
       expect(list.toMapById().keys.toSet(), {'a', 'b'});
     });
 
-    test('includes / overlaps', () {
+    test('includes / includesId / overlaps', () {
       expect(list.includes(_Thing('a')), isTrue);
       expect(list.includes(_Thing('z')), isFalse);
+      expect(list.includesId('a'), isTrue);
+      expect(list.includesId('z'), isFalse);
       expect(list.overlaps([_Thing('b'), _Thing('z')]), isTrue);
       expect(list.overlaps([_Thing('z')]), isFalse);
     });

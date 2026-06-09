@@ -12,6 +12,8 @@ typedef Identity = Identifiable<String>;
 extension IdentifiableIterable<T extends Identifiable<I>, I> on Iterable<T> {
   bool includes(T item) => any(item.isSameAs);
 
+  bool includesId(I id) => any((e) => e.id == id);
+
   bool overlaps(Iterable<T> others) => any(others.includes);
 
   T? byId(I id) {

@@ -1,3 +1,7 @@
+## 0.2.2
+
+- Add `IdentifiableIterable.includesId` — membership by id (the id-typed companion to `includes`).
+
 ## 0.2.1
 
 - Expand test coverage (typed/record ids, `updateById`, `indexWhereById`) and update the README for the generic API. No API changes.
