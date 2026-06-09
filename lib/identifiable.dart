@@ -1,38 +1,50 @@
-mixin Identifiable {
-  String get id;
+mixin Identifiable<I> {
+  I get id;
 
-  bool hasSameId(Identifiable other) => id == other.id;
+  bool hasSameId(Identifiable<I> other) => id == other.id;
 
-  bool isSameAs(Identifiable other) =>
+  bool isSameAs(Identifiable<I> other) =>
       runtimeType == other.runtimeType && id == other.id;
 }
 
-extension IdentifiableIterable<T extends Identifiable> on Iterable<T> {
+typedef Identity = Identifiable<String>;
+
+extension IdentifiableIterable<T extends Identifiable<I>, I> on Iterable<T> {
   bool includes(T item) => any(item.isSameAs);
 
   bool overlaps(Iterable<T> others) => any(others.includes);
 
-  Iterable<T> withoutId(String id) => where((e) => e.id != id);
-
-  T? byId(String id) {
+  T? byId(I id) {
     for (final item in this) {
       if (item.id == id) return item;
     }
     return null;
   }
 
-  Map<String, T> toMapById() => {for (final item in this) item.id: item};
+  Iterable<T> withoutId(I id) => where((e) => e.id != id);
+
+  List<T> updateById(I id, T Function(T current) update) =>
+      [for (final item in this) item.id == id ? update(item) : item];
+
+  List<T> mergeDedupBy(Iterable<T> others) =>
+      [...this, ...others.where((o) => !includes(o))];
+
+  Map<I, T> toMapById() => {for (final item in this) item.id: item};
 }
 
-extension IdentifiableMap<T extends Identifiable> on Map<String, T> {
-  Map<String, T> upsert(T item) => {...this, item.id: item};
+extension IdentifiableList<T extends Identifiable<I>, I> on List<T> {
+  int indexWhereById(I id) => indexWhere((e) => e.id == id);
+}
 
-  Map<String, T> upsertAll(Iterable<T> items) =>
+extension IdentifiableMap<T extends Identifiable<I>, I> on Map<I, T> {
+  Map<I, T> upsert(T item) => {...this, item.id: item};
+
+  Map<I, T> upsertAll(Iterable<T> items) =>
       {...this, for (final item in items) item.id: item};
 
-  Map<String, T> removeById(String id) => {...this}..remove(id);
+  Map<I, T> removeById(I id) => {...this}..remove(id);
 
-  Map<String, T> updateById(String id, T Function(T current) update) {
+  Map<I, T> updateById(I id, T Function(T current) update) {
     final current = this[id];
     if (current == null) return this;
     return {...this, id: update(current)};
