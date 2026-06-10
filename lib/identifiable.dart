@@ -9,6 +9,10 @@ mixin Identifiable<I> {
 
 typedef Identity = Identifiable<String>;
 
+typedef IdentifiableMap<T extends Identifiable<I>, I> = Map<I, T>;
+
+typedef IdentityMap<T extends Identity> = Map<String, T>;
+
 extension IdentifiableIterable<T extends Identifiable<I>, I> on Iterable<T> {
   bool includes(T item) => any(item.isSameAs);
 
@@ -33,9 +37,13 @@ extension IdentifiableIterable<T extends Identifiable<I>, I> on Iterable<T> {
 
 extension IdentifiableList<T extends Identifiable<I>, I> on List<T> {
   int indexWhereById(I id) => indexWhere((e) => e.id == id);
+
+  List<T> withoutId(I id) => [for (final e in this) if (e.id != id) e];
+
+  List<T> appendOrReplaceOnOverlap(List<T> page) => overlaps(page) ? page : [...this, ...page];
 }
 
-extension IdentifiableMap<T extends Identifiable<I>, I> on Map<I, T> {
+extension IdentifiableMapExtension<T extends Identifiable<I>, I> on Map<I, T> {
   Map<I, T> upsert(T item) => {...this, item.id: item};
 
   Map<I, T> upsertAll(Iterable<T> items) =>

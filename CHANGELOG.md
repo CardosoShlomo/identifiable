@@ -1,3 +1,9 @@
+## 0.3.0
+
+- **BREAKING:** rename the `Map` extension `IdentifiableMap` → `IdentifiableMapExtension`, freeing the name for the new typedef.
+- Add typedefs `IdentifiableMap<T, I>` (`= Map<I, T>`) and `IdentityMap<T>` (`= Map<String, T>`).
+- Add `IdentifiableList.withoutId` (List-returning) and `IdentifiableList.appendOrReplaceOnOverlap`.
+
 ## 0.2.2
 
 - Add `IdentifiableIterable.includesId` — membership by id (the id-typed companion to `includes`).

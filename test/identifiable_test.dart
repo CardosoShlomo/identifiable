@@ -71,6 +71,25 @@ void main() {
       expect(list.indexWhereById('b'), 1);
       expect(list.indexWhereById('z'), -1);
     });
+
+    test('withoutId on a List returns a List', () {
+      final result = list.withoutId('a');
+      expect(result, isA<List<_Thing>>());
+      expect(result.map((e) => e.id), ['b']);
+      expect(list.withoutId('z').map((e) => e.id), ['a', 'b']);
+    });
+
+    test('appendOrReplaceOnOverlap appends a fresh page', () {
+      final result = list.appendOrReplaceOnOverlap([_Thing('c'), _Thing('d')]);
+      expect(result.map((e) => e.id), ['a', 'b', 'c', 'd']);
+    });
+
+    test('appendOrReplaceOnOverlap replaces on overlap', () {
+      final page = [_Thing('a', 'fresh'), _Thing('c')];
+      final result = list.appendOrReplaceOnOverlap(page);
+      expect(result.map((e) => e.id), ['a', 'c']);
+      expect(result.byId('a')?.label, 'fresh');
+    });
   });
 
   group('IdentifiableMap', () {
