@@ -9,7 +9,7 @@ mixin Identifiable<I> {
 
 typedef Identity = Identifiable<String>;
 
-typedef IdentifiableMap<T extends Identifiable<I>, I> = Map<I, T>;
+typedef IdentifiableMap<K, E extends Identifiable<K>> = Map<K, E>;
 
 typedef IdentityMap<T extends Identity> = Map<String, T>;
 
