@@ -1,3 +1,9 @@
+## 0.4.0
+
+- **BREAKING:** `IdentifiableMap` flips key-first — `IdentifiableMap<K, E>` (`= Map<K, E>`).
+- Add the id-space: `@IDs` marks the hand-written enum of identities; each `IdNode` row carries its codec; `IdNode.compose`/`CompositeId` build composite ids (2–16 nodes).
+- Depend on `canon_codec` (an id-node IS a `Codec`).
+
 ## 0.3.0
 
 - **BREAKING:** rename the `Map` extension `IdentifiableMap` → `IdentifiableMapExtension`, freeing the name for the new typedef.

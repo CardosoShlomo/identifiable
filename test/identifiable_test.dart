@@ -16,14 +16,14 @@ class _Other with Identity {
   final String id;
 }
 
-class _Chat with Identifiable<(String, String)> {
-  _Chat(this.adId, this.userId);
+class _Review with Identifiable<(String, String)> {
+  _Review(this.productId, this.authorId);
 
-  final String adId;
-  final String userId;
+  final String productId;
+  final String authorId;
 
   @override
-  (String, String) get id => (adId, userId);
+  (String, String) get id => (productId, authorId);
 }
 
 void main() {
@@ -115,21 +115,21 @@ void main() {
   });
 
   group('typed id (record key)', () {
-    final chats = [_Chat('ad1', 'u1'), _Chat('ad1', 'u2')];
+    final reviews = [_Review('p1', 'a1'), _Review('p1', 'a2')];
 
     test('byId / withoutId with a record id', () {
-      expect(chats.byId(('ad1', 'u1'))?.userId, 'u1');
-      expect(chats.byId(('ad1', 'zz')), isNull);
-      expect(chats.withoutId(('ad1', 'u1')).map((c) => c.userId), ['u2']);
+      expect(reviews.byId(('p1', 'a1'))?.authorId, 'a1');
+      expect(reviews.byId(('p1', 'zz')), isNull);
+      expect(reviews.withoutId(('p1', 'a1')).map((r) => r.authorId), ['a2']);
     });
 
     test('isSameAs compares the record id', () {
-      expect(_Chat('ad1', 'u1').isSameAs(_Chat('ad1', 'u1')), isTrue);
-      expect(_Chat('ad1', 'u1').isSameAs(_Chat('ad1', 'u2')), isFalse);
+      expect(_Review('p1', 'a1').isSameAs(_Review('p1', 'a1')), isTrue);
+      expect(_Review('p1', 'a1').isSameAs(_Review('p1', 'a2')), isFalse);
     });
 
     test('toMapById is keyed by the record', () {
-      expect(chats.toMapById()[('ad1', 'u2')]?.userId, 'u2');
+      expect(reviews.toMapById()[('p1', 'a2')]?.authorId, 'a2');
     });
   });
 }
