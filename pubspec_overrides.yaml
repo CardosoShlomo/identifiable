@@ -1,4 +1,0 @@
-# Local dev: the in-progress canon_codec before it's published.
-dependency_overrides:
-  canon_codec:
-    path: ../canon_codec
