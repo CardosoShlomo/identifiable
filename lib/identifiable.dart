@@ -208,10 +208,11 @@ class CompositeId with IdNode {
   final IdNode n1, n2;
   final IdNode? n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15, n16;
 
+  // A getter, not a const field: the language forbids instance creation with
+  // parameter args in a const initializer (merely POTENTIALLY constant —
+  // dart-lang/language#4571 would allow it). A node IS a Codec (it delegates),
+  // so the nodes feed CompositeCodec directly.
   @override
-  Codec get codec => Codec.composite(
-      n1.codec, n2.codec,
-      n3?.codec, n4?.codec, n5?.codec, n6?.codec, n7?.codec, n8?.codec,
-      n9?.codec, n10?.codec, n11?.codec, n12?.codec, n13?.codec, n14?.codec,
-      n15?.codec, n16?.codec);
+  Codec get codec => CompositeCodec(n1, n2, n3, n4, n5, n6, n7, n8, n9, n10,
+      n11, n12, n13, n14, n15, n16);
 }
