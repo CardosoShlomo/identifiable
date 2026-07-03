@@ -131,7 +131,9 @@ abstract interface class EntityTreeNode {}
 mixin EntityNode<Self extends EntityNode<Self>> on Enum
     implements EntityTreeNode {
   Type get type;
-  IdNode get key;
+  /// Null = a UNIT entity: cardinality one, keyless — for entities whose
+  /// identity is the session (the wire sends their facts without an id).
+  IdNode? get key;
 
   /// This entity with its owned children — `review({comment})`.
   EntityTreeNode call([Set<EntityTreeNode> children = const {}]) =>
