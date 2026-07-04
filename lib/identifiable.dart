@@ -138,6 +138,33 @@ mixin EntityNode<Self extends EntityNode<Self>> on Enum
   /// This entity with its owned children — `review({comment})`.
   EntityTreeNode call([Set<EntityTreeNode> children = const {}]) =>
       EntityBranch(this, children);
+
+  /// A MERGE EDGE: this row's per-key READ SURFACE consults [source] through
+  /// [projection] — `user.merge(viewer, const ViewerSupportsUser())`. The
+  /// receiver owns the surface; the source speaks at its own [Identifiable]
+  /// id. Chainable (`.merge(a, pa).merge(b, pb)` — resolution in declaration
+  /// order), and composes with children: `user.merge(...)({image, moment})`.
+  ///
+  /// [projection] is a ledger `Projection` — held untyped here (this package
+  /// sits below ledger); the generator emits the fully typed wiring.
+  EntityMerge merge(Self source, Object projection) =>
+      EntityMerge(this, [(source, projection)]);
+}
+
+/// A row carrying merge edges (and optionally children) — the tree-building
+/// wrapper [EntityNode.merge] returns.
+class EntityMerge implements EntityTreeNode {
+  EntityMerge(this.entity, this.edges, [this.children = const {}]);
+
+  final Enum entity;
+  final List<(Enum, Object)> edges;
+  final Set<EntityTreeNode> children;
+
+  EntityMerge merge(Enum source, Object projection) =>
+      EntityMerge(entity, [...edges, (source, projection)], children);
+
+  EntityMerge call([Set<EntityTreeNode> children = const {}]) =>
+      EntityMerge(entity, edges, children);
 }
 
 /// A row plus its owned children — the tree-building wrapper.
@@ -156,6 +183,10 @@ class EntityGraph {
     void walk(EntityTreeNode node, Enum? parent) {
       final (row, children) = switch (node) {
         EntityBranch(:final entity, :final children) => (entity, children),
+        EntityMerge(:final entity, :final children, :final edges) => () {
+            (_merges[entity] ??= []).addAll(edges);
+            return (entity, children);
+          }(),
         Enum() => (node as Enum, const <EntityTreeNode>{}),
         _ => throw ArgumentError.value(
             node, 'tree', 'not an entity row or branch'),
@@ -185,6 +216,7 @@ class EntityGraph {
   final Set<EntityTreeNode> tree;
   final Set<Enum> _roots = {};
   final Map<Enum, Set<Enum>> _owners = {};
+  final Map<Enum, List<(Enum, Object)>> _merges = {};
 
   /// The aggregate roots — the rows stores may attach to.
   Set<Enum> get roots => _roots;
@@ -195,6 +227,10 @@ class EntityGraph {
 
   /// Whether [row] is an aggregate root (not owned by anything).
   bool isRoot(Enum row) => !_owners.containsKey(row);
+
+  /// The merge edges declared on [row]'s read surface, declaration order:
+  /// (source row, projection instance).
+  List<(Enum, Object)> mergesOf(Enum row) => _merges[row] ?? const [];
 }
 
 /// Why 16: a composite id is a composite PRIMARY KEY, and 16 is the strictest
