@@ -1,3 +1,10 @@
+## 0.5.0
+
+- Add the entity space: `@entities` marks the enum binding each entity type to its id node; `EntityGraph` declares ownership.
+- Unit entities: a row with no key node (cardinality one).
+- Add merge edges: `row.merge(source, projection)` declares a read-surface resolver on the graph.
+- Composite id nodes feed `CompositeCodec` directly.
+
 ## 0.4.0
 
 - **BREAKING:** `IdentifiableMap` flips key-first — `IdentifiableMap<K, E>` (`= Map<K, E>`).
