@@ -1,5 +1,11 @@
+import 'package:meta/meta.dart';
+
 import 'package:canon_codec/canon_codec.dart';
 
+/// Entities are VALUES: folds produce new instances; a mutated entity
+/// corrupts before/after events and optimistic refolds — enforced here for
+/// every class that wears the mixin.
+@immutable
 mixin Identifiable<I> {
   I get id;
 
