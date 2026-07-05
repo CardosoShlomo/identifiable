@@ -64,6 +64,16 @@ extension IdentifiableMapExtension<T extends Identifiable<I>, I> on Map<I, T> {
     if (current == null) return this;
     return {...this, id: update(current)};
   }
+
+  /// The immutable predicate removal — drops every entry [test] matches.
+  /// The cascade-deletion idiom: a composite-keyed collection sheds all
+  /// entries referencing a gone entity in one expression.
+  Map<I, T> withoutWhere(bool Function(I id, T item) test) =>
+      {for (final e in entries) if (!test(e.key, e.value)) e.key: e.value};
+
+  /// Transform every value, keys untouched.
+  Map<I, T> mapValues(T Function(I id, T item) transform) =>
+      {for (final e in entries) e.key: transform(e.key, e.value)};
 }
 
 /// Marks the HAND-WRITTEN enum that is an app's id-space: each row is an identity

@@ -112,6 +112,26 @@ void main() {
       expect(m.containsKey('z'), isFalse);
       expect(m['a']?.label, 'x');
     });
+
+    test('withoutWhere drops every matching entry (cascade deletion)', () {
+      final reviews = <(String, String), _Review>{}
+          .upsert(_Review('shoe', 'ana'))
+          .upsert(_Review('shoe', 'ben'))
+          .upsert(_Review('bag', 'ana'));
+      // the product is delisted — all its reviews go in one expression.
+      final without = reviews.withoutWhere((id, _) => id.$1 == 'shoe');
+      expect(without.keys.toSet(), {('bag', 'ana')});
+    });
+
+    test('mapValues transforms every value, keys untouched', () {
+      final m = <String, _Thing>{}
+          .upsert(_Thing('a', 'x'))
+          .upsert(_Thing('b', 'y'));
+      final upper = m.mapValues((id, t) => _Thing(id, t.label!.toUpperCase()));
+      expect(upper.keys.toSet(), {'a', 'b'});
+      expect(upper['a']?.label, 'X');
+      expect(upper['b']?.label, 'Y');
+    });
   });
 
   group('typed id (record key)', () {

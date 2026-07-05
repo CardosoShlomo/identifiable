@@ -1,3 +1,7 @@
+## 0.5.2
+
+- `withoutWhere` (immutable predicate removal) and `mapValues` on identifiable maps.
+
 ## 0.5.1
 
 - `Identifiable` annotated `@immutable`.
