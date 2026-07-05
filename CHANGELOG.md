@@ -1,3 +1,7 @@
+## 0.5.1
+
+- `Identifiable` annotated `@immutable`.
+
 ## 0.5.0
 
 - Add the entity space: `@entities` marks the enum binding each entity type to its id node; `EntityGraph` declares ownership.
