@@ -1,3 +1,7 @@
+## 0.6.0
+
+- BREAKING: the id/entity grammars move out — `IDs`/`IdNode`/`CompositeId` to canon_codec, `Entities`/`EntityNode`/`EntityGraph` to canon. identifiable is now dependency-free identity collections.
+
 ## 0.5.3
 
 - Widen `canon_codec` to `>=0.1.4 <0.3.0` (accepts the additive 0.2.0 concat).
