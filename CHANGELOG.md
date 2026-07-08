@@ -1,3 +1,7 @@
+## 0.5.3
+
+- Widen `canon_codec` to `>=0.1.4 <0.3.0` (accepts the additive 0.2.0 concat).
+
 ## 0.5.2
 
 - `withoutWhere` (immutable predicate removal) and `mapValues` on identifiable maps.

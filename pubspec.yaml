@@ -1,13 +1,13 @@
 name: identifiable
 description: Identifiable mixin and id-based collection helpers for Dart.
-version: 0.5.2
+version: 0.5.3
 repository: https://github.com/CardosoShlomo/identifiable
 
 environment:
   sdk: ^3.12.0
 
 dependencies:
-  canon_codec: ^0.1.4
+  canon_codec: ">=0.1.4 <0.3.0"
   meta: ^1.16.0
 
 dev_dependencies:
