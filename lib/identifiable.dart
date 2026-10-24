@@ -55,7 +55,10 @@ extension IdentifiableMapExtension<T extends Identifiable<I>, I> on Map<I, T> {
   Map<I, T> upsertAll(Iterable<T> items) =>
       {...this, for (final item in items) item.id: item};
 
-  Map<I, T> removeById(I id) => {...this}..remove(id);
+  /// The same map when [id] is absent, so a fold that removed nothing
+  /// costs no copy and reads as unchanged.
+  Map<I, T> removeById(I id) =>
+      containsKey(id) ? ({...this}..remove(id)) : this;
 
   Map<I, T> updateById(I id, T Function(T current) update) {
     final current = this[id];
@@ -65,9 +68,15 @@ extension IdentifiableMapExtension<T extends Identifiable<I>, I> on Map<I, T> {
 
   /// The immutable predicate removal — drops every entry [test] matches.
   /// The cascade-deletion idiom: a composite-keyed collection sheds all
-  /// entries referencing a gone entity in one expression.
-  Map<I, T> withoutWhere(bool Function(I id, T item) test) =>
-      {for (final e in entries) if (!test(e.key, e.value)) e.key: e.value};
+  /// entries referencing a gone entity in one expression. The same map when
+  /// nothing matched.
+  Map<I, T> withoutWhere(bool Function(I id, T item) test) {
+    final kept = {
+      for (final e in entries)
+        if (!test(e.key, e.value)) e.key: e.value,
+    };
+    return kept.length == length ? this : kept;
+  }
 
   /// Transform every value, keys untouched.
   Map<I, T> mapValues(T Function(I id, T item) transform) =>

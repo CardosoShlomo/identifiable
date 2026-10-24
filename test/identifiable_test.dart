@@ -121,6 +121,16 @@ void main() {
       // the product is delisted — all its reviews go in one expression.
       final without = reviews.withoutWhere((id, _) => id.$1 == 'shoe');
       expect(without.keys.toSet(), {('bag', 'ana')});
+      expect(reviews.keys, hasLength(3)); // the source map is untouched
+    });
+
+    test('a removal that removes nothing hands back the same map', () {
+      final m = <String, _Thing>{}.upsert(_Thing('a', 'x'));
+      expect(identical(m.removeById('z'), m), isTrue);
+      expect(identical(m.withoutWhere((id, _) => id == 'z'), m), isTrue);
+      expect(identical(m.updateById('z', (t) => t), m), isTrue);
+      expect(identical(m.removeById('a'), m), isFalse);
+      expect(m.keys, ['a']); // a real removal copies, never writes in place
     });
 
     test('mapValues transforms every value, keys untouched', () {
