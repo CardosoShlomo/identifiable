@@ -1,3 +1,7 @@
+## 0.6.1
+
+- `removeById` and `withoutWhere` return the same map when nothing is removed.
+
 ## 0.6.0
 
 - BREAKING: the id/entity grammars move out — `IDs`/`IdNode`/`CompositeId` to canon_codec, `Entities`/`EntityNode`/`EntityGraph` to canon. identifiable is now dependency-free identity collections.
